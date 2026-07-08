@@ -5,6 +5,10 @@ Aplicativo desenvolvido em **React Native**, **Expo** e **Firebase**, criado com
 O objetivo do aplicativo é auxiliar a Clínica Escola de Psicologia no gerenciamento dos atendimentos realizados pelos estagiários, oferecendo uma experiência moderna, intuitiva e acessível.
 
 ---
+<p align="center">
+  <img src="./assets/images/preview.png" alt="Preview do aplicativo Clínica Escola de Psicologia" width="1000"/>
+</p>
+----
 
 # Sobre o projeto
 
