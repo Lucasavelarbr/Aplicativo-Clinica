@@ -8,7 +8,8 @@ O objetivo do aplicativo é auxiliar a Clínica Escola de Psicologia no gerencia
 <p align="center">
   <img src="./assets/images/preview.png" alt="Preview do aplicativo Clínica Escola de Psicologia" width="1000"/>
 </p>
-----
+
+---
 
 # Sobre o projeto
 
