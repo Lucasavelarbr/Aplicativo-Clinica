@@ -6,10 +6,6 @@ O objetivo do aplicativo é auxiliar a Clínica Escola de Psicologia no gerencia
 
 ---
 
-![Preview do aplicativo](./assets/preview.png)
-
----
-
 # Sobre o projeto
 
 Este projeto foi desenvolvido durante um trabalho interdisciplinar da faculdade.
