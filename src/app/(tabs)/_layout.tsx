@@ -47,24 +47,42 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="home"
         options={{
+          title: "Início",
+          tabBarAccessibilityLabel: "Início",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "home" : "home-outline"} size={26} color={color} />
+            <Ionicons name={focused ? "home" : "home-outline"} 
+            size={26} 
+            color={color}
+            accessible={false}
+            importantForAccessibility="no" />
           ),
         }}
       />
       <Tabs.Screen
         name="agendar"
         options={{
+          title: "Agendar",
+          tabBarAccessibilityLabel: "Agendar Consulta",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name="calendar-outline" size={26} color={color} />
+            <Ionicons name="calendar-outline" 
+            size={26} 
+            color={color} 
+            accessible={false}
+            importantForAccessibility="no" />
           ),
         }}
       />
       <Tabs.Screen
         name="perfil"
         options={{
+          title: "Perfil",
+          tabBarAccessibilityLabel: "Perfil",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "person" : "person-outline"} size={26} color={color} />
+            <Ionicons name={focused ? "person" : "person-outline"} 
+            size={26} 
+            color={color} 
+            accessible={false}
+            importantForAccessibility="no"/>
           ),
         }}
       />
@@ -72,8 +90,14 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="configuracoes"
         options={{
+          title: "Configurações",
+          tabBarAccessibilityLabel: "Configurações",
           tabBarIcon: ({ color, focused }) => (
-            <Ionicons name={focused ? "settings" : "settings-outline"} size={26} color={color} />
+            <Ionicons name={focused ? "settings" : "settings-outline"} 
+            size={26} 
+            color={color} 
+            accessible={false}
+            importantForAccessibility="no"/>
           ),
         }}
       />

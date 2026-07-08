@@ -90,63 +90,79 @@ export default function Home() {
     const corSubtitulo = isDarkMode ? "#aaa" : "#666";
     const corCardHistoricoTitulo = isDarkMode ? "#FFF" : "#000";
 
-    return (
-        <SafeAreaView style={[styles.containerPrincipal, { backgroundColor: corFundo }]}>
-            <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
-                
-                {/* HEADER */}
-                <View style={styles.header}>
-                    <View style={styles.userInfo}>
-                        <View style={styles.avatarContainer}>
-                            {fotoPerfil ? (
-                                <Image source={{ uri: fotoPerfil }} style={styles.avatar} />
-                            ) : (
-                                <View style={[styles.avatar, styles.avatarPlaceholder]}>
-                                    <Ionicons name="person" size={40} color="#ccc" />
-                                </View>
-                            )}
-                        </View>
-                        
-                        <View style={styles.caixaNome}>
-                            <View style={styles.linhaSaudacao}>
-                                <Text style={[styles.ola, { color: corTexto }]}>Olá, </Text>
-                                {loadingNome ? (
-                                    <ActivityIndicator size="small" color="#7B2FF7" style={styles.loader} />
-                                ) : (
-                                    <Text style={styles.nome}>{nomeUsuario}</Text>
-                                )}
-                            </View>
-                            <Text style={[styles.subtitulo, { color: corSubtitulo }]}>Seja bem-vindo de volta</Text>
-                        </View>
+return (
+<SafeAreaView style={[styles.containerPrincipal, { backgroundColor: corFundo }]}>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+        
+    {/* HEADER */}
+    <View style={styles.header}>
+        <View style={styles.userInfo}>
+            <View style={styles.avatarContainer}>
+                {fotoPerfil ? (
+                    <Image accessibilityLabel="Foto de perfil" source={{ uri: fotoPerfil }} style={styles.avatar} />
+                ) : (
+                    <View style={[styles.avatar, styles.avatarPlaceholder]}>
+                        <Ionicons name="person" size={40} color="#ccc" />
                     </View>
-                </View>
+                )}
+            </View>
+                        
+        <View style={styles.caixaNome}
+            accessible
+            accessibilityLabel={loadingNome ? "Carregando informações do usuário." : `Olá, ${nomeUsuario}. Seja bem-vindo de volta.`}>
+            <View style={styles.linhaSaudacao} importantForAccessibility="no-hide-descendants">
+                <Text style={[styles.ola, { color: corTexto }]}>Olá, </Text>
+                {loadingNome ? (
+                    <ActivityIndicator size="small" color="#7B2FF7" style={styles.loader} />
+                ) : (
+                    <Text style={styles.nome}>{nomeUsuario}</Text>
+                )}
+            </View>
+            <Text style={[styles.subtitulo, { color: corSubtitulo }]} importantForAccessibility="no">Seja bem-vindo de volta</Text>
+        </View>
+    </View>
+</View>
 
-                {/* CONSULTAS AGENDADAS */}
-                <View style={styles.historicoContainer}>
-                    <Text style={[styles.historicoTitulo, { color: corCardHistoricoTitulo }]}>Consultas agendadas</Text>
-                    {consultas.map((consulta) => (
-                        <View key={consulta.id} style={[styles.consultaCard, consulta.nomeResponsavel && consulta.nomeResponsavel.trim() !== "" && styles.cardMenorIdade]}>
-                            <View style={styles.dataBox}>
-                                <Text style={styles.dia}>{`${consulta.dataConsulta?.split("-")[2]}/${consulta.dataConsulta?.split("-")[1]}`}</Text>
-                            </View>
-                            <View style={styles.consultaInfo}>
-                                <Text style={styles.horario}>Sala {consulta.sala} • {consulta.horario}</Text>
-                                <Text style={styles.paciente}>{consulta.nome}</Text>
-                                {consulta.nomeResponsavel && <Text style={styles.responsavel}>Resp: {consulta.nomeResponsavel}</Text>}
-                                {consulta.telefoneResponsavel && <Text style={styles.responsavel}>Tel: {consulta.telefoneResponsavel}</Text>}
-                                <Text style={styles.status}>{consulta.status}</Text>
-                                <TouchableOpacity style={styles.cancelarButton} onPress={() => cancelarConsulta(consulta.id, consulta.idBloqueio)}>
-                                    <Text style={styles.cancelarTexto}>Cancelar</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.atendidoButton} onPress={() => finalizarConsulta(consulta.id, consulta.idBloqueio)}>
-                                    <Text style={styles.atendidoTexto}>Atendido</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            </ScrollView>
-        </SafeAreaView>
+        {/* CONSULTAS AGENDADAS */}
+<View style={styles.historicoContainer}>
+    <Text accessibilityRole="header" style={[styles.historicoTitulo, { color: corCardHistoricoTitulo }]}>Consultas agendadas</Text>
+    {consultas.map((consulta) => (
+        <View key={consulta.id} style={[styles.consultaCard, consulta.nomeResponsavel && consulta.nomeResponsavel.trim() !== "" && styles.cardMenorIdade]}>
+            <View style={styles.dataBox}>
+                <Text style={styles.dia}>{`${consulta.dataConsulta?.split("-")[2]}/${consulta.dataConsulta?.split("-")[1]}`}</Text>
+            </View>
+            <View style={styles.consultaInfo}>
+               
+               {/* SALA */}
+                <Text accessibilityLabel={`Sala ${consulta.sala}. Horário ${consulta.horario}.`} style={styles.horario}>Sala {consulta.sala} • {consulta.horario}</Text>
+                
+                {/* PACIENTE */}
+                <Text accessibilityLabel={`Paciente ${consulta.nome}`}style={styles.paciente}>{consulta.nome}</Text>
+                <Text accessibilityLabel={`Responsável ${consulta.nomeResponsavel}`} style={styles.responsavel}>Resp: {consulta.nomeResponsavel}</Text>
+                <Text accessibilityLabel={`Telefone do responsável ${consulta.telefoneResponsavel}`} style={styles.responsavel}>Tel: {consulta.telefoneResponsavel}</Text>
+                <Text accessibilityLabel={`Status da consulta: ${consulta.status}`} style={styles.status}>{consulta.status}</Text>
+                <TouchableOpacity style={styles.cancelarButton}
+                    accessibilityRole="button"
+                    accessibilityLabel={`Cancelar consulta de ${consulta.nome}`}
+                    accessibilityHint="Cancela esta consulta e libera o horário."
+                    onPress={() => cancelarConsulta(
+                        consulta.id, 
+                        consulta.idBloqueio)}>
+                    <Text style={styles.cancelarTexto}>Cancelar</Text>
+                </TouchableOpacity>
+                <TouchableOpacity style={styles.atendidoButton} 
+                    accessibilityRole="button"
+                    accessibilityLabel={`Finalizar consulta de ${consulta.nome}`}
+                    accessibilityHint="Marca a consulta como atendida."
+                    onPress={() => finalizarConsulta(consulta.id, consulta.idBloqueio)}>
+                    <Text style={styles.atendidoTexto}>Atendido</Text>
+                </TouchableOpacity>
+            </View>
+        </View>
+    ))}
+</View>
+    </ScrollView>
+</SafeAreaView>
     );
 }
 

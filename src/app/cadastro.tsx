@@ -10,6 +10,8 @@ import {
     View
 } from "react-native";
 
+import { AccessibilityInfo } from "react-native";
+
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 
@@ -60,7 +62,7 @@ async function cadastrar(){
     setErro("")
 
     if(!nome){
-        setErro("Preencha o nome completo");
+        anunciarMensagem("Preencha o nome completo.");
         return;
     }
 
@@ -116,7 +118,11 @@ async function cadastrar(){
 
             setErro("Conta criada com sucesso!");
 
-            router.push("/login");
+            AccessibilityInfo.announceForAccessibility(
+                "Conta criada com sucesso."
+            );
+
+            setTimeout(() => {router.replace("/login");}, 800);
 
         }catch(error: any){
 
@@ -130,32 +136,30 @@ async function cadastrar(){
         }
     }
 
-
+    function anunciarMensagem(mensagem: string) {
+    setErro(mensagem);
+    AccessibilityInfo.announceForAccessibility(mensagem);
+}
 
 
     return(
 <SafeAreaView style={{ flex: 1, backgroundColor: "#fff"}}>
- <KeyboardAvoidingView
-        style={{ flex: 1 }}
-        behavior={Platform.OS === "ios" ? "padding" : "height"}
-    >
-    <ScrollView
-        contentContainerStyle={{ 
-            paddingBottom: 50
-         }}
+ <KeyboardAvoidingView style={{ flex: 1 }} behavior={Platform.OS === "ios" ? "padding" : "height"}>
+    <ScrollView contentContainerStyle={{ paddingBottom: 50}}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
-          keyboardDismissMode="on-drag"
-        >  
+          keyboardDismissMode="on-drag">  
 
         <View style={styles.container}>
-            <Text style={styles.tittle}>Criar conta</Text>
+            <Text accessibilityRole="header" style={styles.tittle}>Criar conta</Text>
             <Text style={styles.subTittle}>Insira os dados abaixo:</Text>
 
             <View style={styles.inputs}>
                 <Input 
                     label="Nome completo"
                     placeholder="Digite seu nome"
+                    textContentType="name"
+                    autoComplete="name"
                     value={nome}
                     onChangeText={setNome}
                 />
@@ -166,6 +170,8 @@ async function cadastrar(){
                     autoCapitalize="none"
                     autoCorrect={false}
                     keyboardType="numeric"
+                    textContentType="none"
+                    autoComplete="off"
                     value={cpf}
                     onChangeText={mascaraCpf}
                 />
@@ -174,7 +180,8 @@ async function cadastrar(){
                     label="E-mail"
                     placeholder="Digite seu e-mail"
                     keyboardType="email-address"
-                    autoCapitalize="none"
+                    textContentType="emailAddress"
+                    autoComplete="email"
                     autoCorrect={false}
                     value={email}
                     onChangeText={setEmail}
@@ -185,6 +192,8 @@ async function cadastrar(){
                     placeholder="Senha"
                     secureTextEntry
                     autoCapitalize="none"
+                    textContentType="newPassword"
+                    autoComplete="new-password"
                     autoCorrect={false}
                     value={senha}
                     onChangeText={setSenha}
@@ -212,13 +221,13 @@ async function cadastrar(){
             </View>   
             
             {erro !== "" && (
-                <Text style={styles.erro}>{erro}</Text>
+                <Text style={styles.erro} accessibilityLiveRegion="assertive">{erro}</Text>
                 )
             }
 
 
             <View style={styles.conta}>
-                <Link href="/login">
+                <Link href="/login" accessibilityRole="link" accessibilityLabel="Já possui conta?">
                     <Text style={styles.textoConta}>Já possui conta?</Text>
                 </Link>    
                 

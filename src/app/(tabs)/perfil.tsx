@@ -124,7 +124,7 @@ export default function Perfil() {
     if (loading) {
         return (
             <View style={[styles.loadingContainer, { backgroundColor: corFundo }]}>
-                <ActivityIndicator size="large" color="#5c27c6" />
+                <ActivityIndicator accessibilityLabel="Carregando perfil." size="large" color="#5c27c6" />
                 <Text style={styles.loadingText}>Carregando perfil...</Text>
             </View>
         );
@@ -137,7 +137,7 @@ export default function Perfil() {
             <Modal animationType="slide" transparent={true} visible={modalTelefoneVisible}>
                 <View style={styles.modalOverlay}>
                     <View style={[styles.modalContent, { backgroundColor: corModalFundo }]}>
-                        <Text style={styles.modalTitle}>Alterar Telefone</Text>
+                        <Text  accessibilityRole="header" style={styles.modalTitle}>Alterar Telefone</Text>
                         <View style={styles.modalForm}>
                             <Input label="Novo Telefone" placeholder="(00) 90000-0000" value={novoTelefone} onChangeText={(text) => aplicarMascaraTelefone(text, "modal")} keyboardType="numeric" />
                         </View>
@@ -170,8 +170,12 @@ export default function Perfil() {
                 
                 {/* HEADER */}
                 <View style={styles.header}>
-                    <TouchableOpacity onPress={() => router.push("/(tabs)/home")}><Ionicons name="arrow-back" size={28} color="#5c27c6" /></TouchableOpacity>
-                    <Text style={[styles.headerTitle, { color: corTexto }]}>Meu Perfil</Text>
+                    <TouchableOpacity 
+                        accessibilityRole="button"
+                        accessibilityLabel="Voltar"
+                        accessibilityHint="Volta para a tela inicial."
+                        onPress={() => router.push("/(tabs)/home")}><Ionicons name="arrow-back" size={28} color="#5c27c6" /></TouchableOpacity>
+                    <Text accessibilityRole="header" style={[styles.headerTitle, { color: corTexto }]}>Meu Perfil</Text>
                     <View style={{ width: 28 }} />
                 </View>
 
@@ -179,11 +183,15 @@ export default function Perfil() {
                 <View style={styles.avatarSelecContainer}>
                     <View style={styles.avatarWrapper}>
                         {fotoPerfil ? (
-                            <Image source={{ uri: fotoPerfil }} style={styles.perfilAvatar} />
+                            <Image  accessibilityLabel="Foto de perfil" source={{ uri: fotoPerfil }} style={styles.perfilAvatar} />
                         ) : (
                             <View style={[styles.perfilAvatar, styles.avatarPlaceholder]}><Ionicons name="person" size={50} color="#ccc" /></View>
                         )}
-                        <TouchableOpacity style={styles.perfilBotaoCamera} onPress={escolherFoto}><Ionicons name="camera" size={18} color="#FFF" /></TouchableOpacity>
+                        <TouchableOpacity 
+                        accessibilityRole="button"
+                        accessibilityLabel="Alterar foto de perfil"
+                        accessibilityHint="Abre a galeria de imagens."
+                        style={styles.perfilBotaoCamera} onPress={escolherFoto}><Ionicons name="camera" size={18} color="#FFF" /></TouchableOpacity>
                     </View>
                 </View>
 
@@ -199,11 +207,16 @@ export default function Perfil() {
                     <Input label="E-mail" value={email} editable={false} />
                     <View style={styles.inputContainerEdicao}>
                         <View style={{ flex: 1 }}><Input label="Telefone" value={telefone} editable={false} /></View>
-                        <TouchableOpacity style={styles.btnEditarInput} onPress={() => setModalTelefoneVisible(true)}><Ionicons name="create-outline" size={24} color="#5c27c6" /></TouchableOpacity>
+                        <TouchableOpacity style={styles.btnEditarInput} 
+                        accessibilityLabel="Editar telefone" accessibilityHint="Abre a edição do telefone."
+                        onPress={() => setModalTelefoneVisible(true)}><Ionicons name="create-outline" size={24} color="#5c27c6" /></TouchableOpacity>
                     </View>
                     <View style={styles.inputContainerEdicao}>
                         <View style={{ flex: 1 }}><Input label="Senha" value="••••••••" editable={false} secureTextEntry={true} /></View>
-                        <TouchableOpacity style={styles.btnEditarInput} onPress={() => setModalSenhaVisible(true)}><Ionicons name="create-outline" size={24} color="#5c27c6" /></TouchableOpacity>
+                        <TouchableOpacity style={styles.btnEditarInput} 
+                        accessibilityLabel="Alterar senha" 
+                        accessibilityHint="Abre a alteração da senha."
+                        onPress={() => setModalSenhaVisible(true)}><Ionicons name="create-outline" size={24} color="#5c27c6" /></TouchableOpacity>
                     </View>
                 </View>
             </ScrollView>

@@ -1,12 +1,9 @@
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
-import { signOut } from "firebase/auth";
 import React, { useState } from "react";
-import { Alert, Linking, Modal, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
+import { AccessibilityInfo, Alert, Linking, Modal, ScrollView, StyleSheet, Switch, Text, TouchableOpacity, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useTheme } from "../../context/ThemeContext";
-import { auth } from "../../services/firebaseConfig";
-
 
 export default function Configuracoes() {
     const { isDarkMode, toggleTheme } = useTheme();
@@ -16,8 +13,8 @@ export default function Configuracoes() {
     // FUNÇÃO DE LOGOUT TRADICIONAL RESTAURADA (Sem biometria)
     async function fazerLogout() {
         try {
-            await signOut(auth);
-            router.replace("/login");
+           setTimeout(()=>{
+            router.replace("/login")},800)
         } catch (error) {
             Alert.alert("Erro", "Não foi possível sair do aplicativo.");
         }
@@ -41,6 +38,10 @@ export default function Configuracoes() {
             ]
         );
     }
+
+        AccessibilityInfo.announceForAccessibility(
+            "Logout realizado."
+        )
 
     // Cores Dinâmicas baseadas no Tema Global
     const corFundo = isDarkMode ? "#121212" : "#FFF";
@@ -69,13 +70,14 @@ export default function Configuracoes() {
         <SafeAreaView style={[styles.containerPrincipal, { backgroundColor: corFundo }]}>
             
             {/* MODAL COMPLETO DE PRIVACIDADE E LGPD */}
-            <Modal animationType="fade" transparent={true} visible={modalLgpdVisible}>
+            <Modal accessibilityViewIsModal={true} animationType="fade" transparent={true} visible={modalLgpdVisible}>
                 <View style={styles.modalOverlay}>
                     <View style={[styles.modalContent, { backgroundColor: corCardFundo }]}>
                         <View style={styles.modalHeader}>
-                            <Text style={[styles.modalTitle, { color: corTexto }]}>Termos e Privacidade (LGPD)</Text>
-                            <TouchableOpacity onPress={() => setModalLgpdVisible(false)}>
-                                <Ionicons name="close" size={24} color={corTexto} />
+                            <Text accessibilityRole="header" style={[styles.modalTitle, { color: corTexto }]}>Termos e Privacidade (LGPD)</Text>
+                            <TouchableOpacity accessibilityLabel="Privacidade e Termos" accessibilityHint="Abre os termos de uso e privacidade." onPress={() => setModalLgpdVisible(false)}>
+                                <Ionicons accessibilityRole="button" accessibilityLabel="Fechar"
+                                    accessibilityHint="Fecha os termos de privacidade." name="close" size={24} color={corTexto} />
                             </TouchableOpacity>
                         </View>
 
@@ -97,7 +99,7 @@ export default function Configuracoes() {
                             </Text>
                         </ScrollView>
 
-                        <TouchableOpacity style={styles.modalBotaoFechar} onPress={() => setModalLgpdVisible(false)}>
+                        <TouchableOpacity accessibilityRole="button" accessibilityLabel="Li e concordo" accessibilityHint="Fecha os termos." style={styles.modalBotaoFechar} onPress={() => setModalLgpdVisible(false)}>
                             <Text style={styles.modalBotaoTexto}>Li e concordo</Text>
                         </TouchableOpacity>
                     </View>
@@ -105,95 +107,81 @@ export default function Configuracoes() {
             </Modal>
 
             {/* CONTEÚDO PRINCIPAL DAS CONFIGURAÇÕES */}
-            <ScrollView 
-                style={styles.container} 
-                contentContainerStyle={styles.contentContainer} 
-                showsVerticalScrollIndicator={false}
-            >
-                <View style={styles.header}>
-                    <Text style={[styles.headerTitle, { color: corTexto }]}>Configurações</Text>
-                </View>
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer} showsVerticalScrollIndicator={false}>
+        <View style={styles.header}>
+            <Text  accessibilityRole="header" style={[styles.headerTitle, { color: corTexto }]}>Configurações</Text>
+        </View>
 
-                {/* SEÇÃO: SEGURANÇA */}
-                <Text style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>SEGURANÇA</Text>
-                <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
-                    <TouchableOpacity style={styles.linhaOpcao} onPress={() => setModalLgpdVisible(true)}>
-                        <View style={styles.linhaEsquerda}>
-                            <Ionicons name="shield-checkmark-outline" size={22} color="#5c27c6" />
-                            <Text style={[styles.opcaoTexto, { color: corTexto }]}>Privacidade e Termos</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={18} color={corSubtitulo} />
-                    </TouchableOpacity>
+        {/* SEÇÃO: SEGURANÇA */}
+        <Text accessibilityRole="header" style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>SEGURANÇA</Text>
+        <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
+            <TouchableOpacity style={styles.linhaOpcao} onPress={() => setModalLgpdVisible(true)}>
+                <View style={styles.linhaEsquerda}>
+                    <Ionicons name="shield-checkmark-outline" size={22} color="#5c27c6" />
+                    <Text style={[styles.opcaoTexto, { color: corTexto }]}>Privacidade e Termos</Text>
                 </View>
+                <Ionicons name="chevron-forward" size={18} color={corSubtitulo} />
+            </TouchableOpacity>
+        </View>
 
-                {/* SEÇÃO: PREFERÊNCIAS */}
-                <Text style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>PREFERÊNCIAS</Text>
-                <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
-                    <View style={styles.linhaOpcao}>
-                        <View style={styles.linhaEsquerda}>
-                            <Ionicons name="notifications-outline" size={22} color="#5c27c6" />
-                            <Text style={[styles.opcaoTexto, { color: corTexto }]}>Notificações Lembretes</Text>
-                        </View>
-                        <Switch 
-                            value={notificacoes} 
-                            onValueChange={setNotificacoes}
-                            trackColor={{ false: "#767577", true: "#BFA2F7" }}
-                            thumbColor={notificacoes ? "#5c27c6" : "#f4f3f4"}
-                        />
-                    </View>
-                    <View style={[styles.divisor, { backgroundColor: corLinhaDivisoria }]} />
-                    <View style={styles.linhaOpcao}>
-                        <View style={styles.linhaEsquerda}>
-                            <Ionicons name="moon-outline" size={22} color="#5c27c6" />
-                            <Text style={[styles.opcaoTexto, { color: corTexto }]}>Modo Escuro</Text>
-                        </View>
-                        <Switch 
-                            value={isDarkMode} 
-                            onValueChange={toggleTheme}
-                            trackColor={{ false: "#767577", true: "#BFA2F7" }}
-                            thumbColor={isDarkMode ? "#5c27c6" : "#f4f3f4"}
-                        />
-                    </View>
+        {/* SEÇÃO: PREFERÊNCIAS */}
+        <Text style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>PREFERÊNCIAS</Text>
+        <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
+            <View style={[styles.divisor, { backgroundColor: corLinhaDivisoria }]} />
+            <View style={styles.linhaOpcao}>
+                <View style={styles.linhaEsquerda}>
+                    <Ionicons name="moon-outline" size={22} color="#5c27c6" />
+                    <Text style={[styles.opcaoTexto, { color: corTexto }]}>Modo Escuro</Text>
                 </View>
+                <Switch 
+                    accessibilityLabel="Modo escuro"
+                    accessibilityHint="Ativa ou desativa o modo escuro."
+                    value={isDarkMode} 
+                    onValueChange={toggleTheme}
+                    trackColor={{ false: "#767577", true: "#BFA2F7" }}
+                    thumbColor={isDarkMode ? "#5c27c6" : "#f4f3f4"}
+                />
+            </View>
+        </View>
 
-                {/* SEÇÃO: SUPORTE */}
-                <Text style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>SUPORTE</Text>
-                <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
-                    <TouchableOpacity style={styles.linhaOpcao} onPress={whatsapp}>
-                        <View style={styles.linhaEsquerda}>
-                            <Ionicons name="logo-whatsapp" size={22} color="#25D366" />
-                            <Text style={[styles.opcaoTexto, { color: corTexto }]}>Suporte via WhatsApp</Text>
-                        </View>
-                        <Ionicons name="chevron-forward" size={18} color={corSubtitulo} />
-                    </TouchableOpacity>
+        {/* SEÇÃO: SUPORTE */}
+        <Text style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>SUPORTE</Text>
+        <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
+            <TouchableOpacity  accessible accessibilityRole="button" accessibilityLabel="Suporte via WhatsApp" accessibilityHint="Abre uma conversa no WhatsApp."style={styles.linhaOpcao} onPress={whatsapp}>
+                <View style={styles.linhaEsquerda}>
+                    <Ionicons name="logo-whatsapp" size={22} color="#25D366" />
+                    <Text style={[styles.opcaoTexto, { color: corTexto }]}>Suporte via WhatsApp</Text>
                 </View>
+                <Ionicons name="chevron-forward" size={18} color={corSubtitulo} />
+            </TouchableOpacity>
+        </View>
 
-                {/* SEÇÃO: AÇÕES */}
-                <Text style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>AÇÕES</Text>
-                <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
-                    <TouchableOpacity style={styles.linhaOpcao} onPress={confirmarExclusaoConta}>
-                        <View style={styles.linhaEsquerda}>
-                            <Ionicons name="trash-outline" size={22} color="#a90404" />
-                            <Text style={[styles.opcaoTexto, { color: "#a90404", fontWeight: "600" }]}>Excluir minha conta</Text>
-                        </View>
-                    </TouchableOpacity>
-                    <View style={[styles.divisor, { backgroundColor: corLinhaDivisoria }]} />
-                    <TouchableOpacity style={styles.linhaOpcao} onPress={fazerLogout}>
-                        <View style={styles.linhaEsquerda}>
-                            <Ionicons name="log-out-outline" size={22} color={corTexto} />
-                            <Text style={[styles.opcaoTexto, { color: corTexto }]}>Sair do aplicativo</Text>
-                        </View>
-                    </TouchableOpacity>
+        {/* SEÇÃO: AÇÕES */}
+        <Text style={[styles.secaoTitulo, { color: corSecaoTitulo }]}>AÇÕES</Text>
+        <View style={[styles.cardGrupo, { backgroundColor: corCardFundo }]}>
+            <TouchableOpacity accessibilityLabel="Excluir conta" accessibilityHint="Remove permanentemente sua conta."style={styles.linhaOpcao} onPress={confirmarExclusaoConta}>
+                <View style={styles.linhaEsquerda}>
+                    <Ionicons name="trash-outline" size={22} color="#a90404" />
+                    <Text style={[styles.opcaoTexto, { color: "#a90404", fontWeight: "600" }]}>Excluir minha conta</Text>
                 </View>
-
-                {/* CRÉDITOS E VERSÃO */}
-                <View style={styles.footerCreditos}>
-                    <Text style={[styles.txtVersao, { color: corSubtitulo }]}>Versão 1.0.0</Text>
-                    <Text style={[styles.txtDesenvolvedor, { color: corSubtitulo }]}>Desenvolvido por Lucas Brasil</Text>
+            </TouchableOpacity>
+            <View style={[styles.divisor, { backgroundColor: corLinhaDivisoria }]} />
+            <TouchableOpacity accessibilityLabel="Sair do aplicativo" accessibilityHint="Encerra sua sessão." style={styles.linhaOpcao} onPress={fazerLogout}>
+                <View style={styles.linhaEsquerda}>
+                    <Ionicons name="log-out-outline" size={22} color={corTexto} />
+                    <Text style={[styles.opcaoTexto, { color: corTexto }]}>Sair do aplicativo</Text>
                 </View>
+            </TouchableOpacity>
+        </View>
 
-            </ScrollView>
-        </SafeAreaView>
+        {/* CRÉDITOS E VERSÃO */}
+        <View style={styles.footerCreditos}>
+            <Text style={[styles.txtVersao, { color: corSubtitulo }]}>Versão 1.0.0</Text>
+            <Text style={[styles.txtDesenvolvedor, { color: corSubtitulo }]}>Desenvolvido por Lucas Brasil</Text>
+        </View>
+
+    </ScrollView>
+</SafeAreaView>
     );
 }
 

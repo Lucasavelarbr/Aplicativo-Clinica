@@ -2,7 +2,7 @@ import { Link, router } from "expo-router";
 import { sendPasswordResetEmail, signInWithEmailAndPassword } from "firebase/auth";
 import { doc, getDoc } from "firebase/firestore";
 import { useState } from "react";
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { AccessibilityInfo, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import { Button } from "../components/Button";
 import { Input } from "../components/Input";
 import { useTheme } from "../context/ThemeContext";
@@ -18,7 +18,7 @@ export default function Login() {
     async function entrar() {
         setErro("");
         if (!email.trim() || !senha.trim()) {
-            setErro("Preencha e-mail e senha");
+            anunciarMensagem("Preencha e-mail e senha.");
             return;
         }
         try {
@@ -35,16 +35,15 @@ export default function Login() {
                 router.replace("/(tabs)/home");
             }
         } catch (error) {
-            setErro("E-mail ou senha incorretos.");
+            anunciarMensagem("E-mail ou senha incorretos.");
         } finally {
             setLoading(false);
         }
     }
-
     async function recuperarSenha() {
         setErro("");
         if (!email.trim()) {
-            setErro("Digite seu e-mail acima para recuperar a senha.");
+            anunciarMensagem("Digite seu e-mail acima para recuperar a senha.");
             return;
         }
         try {
@@ -54,6 +53,11 @@ export default function Login() {
             setErro("Não foi possível enviar o e-mail.");
         }
     }
+
+    function anunciarMensagem(mensagem: string) {
+        setErro(mensagem);
+        AccessibilityInfo.announceForAccessibility(mensagem);
+}
 
     const corFundo = isDarkMode ? "#121212" : "#fff";
     const corTexto = isDarkMode ? "#fff" : "#000";

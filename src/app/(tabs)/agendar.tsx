@@ -287,27 +287,21 @@ export default function Agendar() {
                 <View style={styles.header}>
 
                     {/* RESETA AO VOLTAR */}
-                    <TouchableOpacity
-                        onPress={() => {
-                            limparFormulario();
+                    <TouchableOpacity accessibilityRole="button" accessibilityLabel="Voltar" accessibilityHint="Volta para a tela anterior."
+                        onPress={() => {limparFormulario();
                             router.back();
-                        }}
-                    >
+                        }}>
                         <Ionicons
+                            accessible={false}
+                            importantForAccessibility="no"
                             name="arrow-back"
                             size={28}
                             color="#5c27c6"
                         />
                     </TouchableOpacity>
-
                 </View>
 
-                <Text
-                    style={[
-                        styles.titulo,
-                        { color: corTexto }
-                    ]}
-                >
+                <Text accessibilityRole="header" style={[styles.titulo,{ color: corTexto }]}>
                     Agendar consulta
                 </Text>
 
@@ -355,7 +349,7 @@ export default function Agendar() {
                 </View>
 
                 <View style={styles.calendarContainer}>
-                    <Text style={styles.calendarTitle}>
+                    <Text accessibilityRole="header" style={styles.calendarTitle}>
                         Escolha a data
                     </Text>
 
@@ -413,7 +407,7 @@ export default function Agendar() {
                 ) : (
                     <>
                         <View style={styles.sectionContainer}>
-                            <Text style={styles.sectionTitle}>
+                            <Text accessibilityRole="header" style={styles.sectionTitle}>
                                 Selecione a sala
                             </Text>
 
@@ -469,7 +463,7 @@ export default function Agendar() {
 
                         {salaSelecionada && (
                             <View style={styles.sectionContainer}>
-                                <Text style={styles.sectionTitle}>
+                                <Text accessibilityRole="header" style={styles.sectionTitle}>
                                     Escolha o horário
                                 </Text>
 

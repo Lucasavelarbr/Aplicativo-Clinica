@@ -15,14 +15,14 @@ export function Button({title, ...rest}: Props){
      <View style={styles.container}>   
         <TouchableOpacity 
         accessibilityRole="button"
-        accessibilityLabel="title"
+        accessibilityLabel={title}
         activeOpacity={0.8}
         style={styles.button}
 
          {...rest}
         >
 
-        <Text style={styles.tittle}>{title}</Text>
+        <Text style={styles.tittle} importantForAccessibility="no">{title}</Text>
 
         </TouchableOpacity>
     </View>
